@@ -7,7 +7,7 @@
             Hello {{request.user|title}}
         </h1>
         <h3 style="margin:0"> 
-            You have <i>{{count}}</i> incomplete task{{ count|pluralize:"s" }}
+            You have <i>{{countpending}}</i> incomplete task{{ countexpired|pluralize:"s" }} and <i>{{countcompleted}}</i> completed task{{ countcompleted|pluralize:"s" }} and <i>{{countexpired}}</i> expired task{{ countexpired|pluralize:"s" }}
         </h3>
     </div>
     {% if request.user.is_authenticated %}
@@ -25,7 +25,7 @@
 
 
 <div id = "search-add-wrapper">
-    <form mehtod = "GET" style="margin-top: 20px; display: flex;">
+    <form method = "GET" style="margin-top: 20px; display: flex;">
         <input type = 'text' name = 'search-area' value= {{search_input}}>
         <input class = "button" type = 'submit' value = 'Search'>
     </form>
@@ -34,14 +34,14 @@
 
 
 <div id="tasklist" class="task-items-wrapper">
+    <h3>Completed Tasks</h3>
     {% for task in tasks %}
+    {% if task.status == 'completed' %}
     <div class="task-wrapper" data-position="{{task.pk}}">
         <div class="task-title">
-            {% if task.complete %}
+            
             <div class="task-complete-icon"></div>
-            <i><s><a href="{% url 'task-update' task.id %}">{{task}}</a></s></i> {% else %}
-            <div class="task-incomplete-icon"></div>
-            <a href="{% url 'task-update' task.id %}">{{task}}</a> {% endif %}
+            <i><a href="{% url 'task-update' task.id %}">{{task}}</a></i>
         </div>
         <div class="task-controls">
             <a class="delete-link" href="{% url 'task-delete' task.id %}">&#215;</a>
@@ -49,10 +49,60 @@
         </div>
     </div>
 
+    {% endif %}
     {% empty %}
     <div style="text-align: center; padding-bottom: 10px; line-height: 1em;">
         <h3>No new tasks are created.</h3>
-        <h3>Create a <a style="text-decoration: none; color: #e53935;" href="{% url 'task-create' %}">New task</a> ! </h3>
+        <h3>Create a <a style="color: #e53935;" href="{% url 'task-create' %}">New task</a> ! </h3>
+    </div>
+    {% endfor %}
+</div>
+<div id="tasklist" class="task-items-wrapper">
+    <h3>Pending Tasks</h3>
+    {% for task in tasks %}
+    {% if task.status == 'pending' %}
+    <div class="task-wrapper" data-position="{{task.pk}}">
+        <div class="task-title">
+            
+            <div class="task-pending-icon"></div>
+            <i><a href="{% url 'task-update' task.id %}">{{task}}</a></i>
+        </div>
+        <div class="task-controls">
+            <a class="delete-link" href="{% url 'task-delete' task.id %}">&#215;</a>
+            <span class="handle">&nbsp;&#10247;</span>
+        </div>
+    </div>
+
+    {% endif %}
+    {% empty %}
+    <div style="text-align: center; padding-bottom: 10px; line-height: 1em;">
+        <h3>No new tasks are created.</h3>
+        <h3>Create a <a style="color: #e53935;" href="{% url 'task-create' %}">New task</a> ! </h3>
+    </div>
+    {% endfor %}
+</div>
+
+<div id="tasklist" class="task-items-wrapper">
+    <h3>Expired Tasks</h3>
+    {% for task in tasks %}
+    {% if task.status == 'expired' %}
+    <div class="task-wrapper" data-position="{{task.pk}}">
+        <div class="task-title">
+            
+            <div class="task-expired-icon"></div>
+            <i><a href="{% url 'task-update' task.id %}">{{task}}</a></i>
+        </div>
+        <div class="task-controls">
+            <a class="delete-link" href="{% url 'task-delete' task.id %}">&#215;</a>
+            <span class="handle">&nbsp;&#10247;</span>
+        </div>
+    </div>
+
+    {% endif %}
+    {% empty %}
+    <div style="text-align: center; padding-bottom: 10px; line-height: 1em;">
+        <h3>No new tasks are created.</h3>
+        <h3>Create a <a style="color: #e53935;" href="{% url 'task-create' %}">New task</a> ! </h3>
     </div>
     {% endfor %}
 </div>

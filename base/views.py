@@ -27,7 +27,9 @@ class TaskList(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['tasks'] = context['tasks'].filter(user=self.request.user)
-        context['count'] = context['tasks'].filter(complete=False).count()
+        context['countpending'] = context['tasks'].filter(status='pending').count()
+        context['countcompleted'] = context['tasks'].filter(status='completed').count()
+        context['countexpired'] = context['tasks'].filter(status='expired').count()
 
         search_input = self.request.GET.get('search-area') or ''
         if search_input:
@@ -35,7 +37,6 @@ class TaskList(LoginRequiredMixin, ListView):
                 title__startswith=search_input)
         context['search_input'] = search_input
         return context
-
 
 class RegisterPage(FormView):
     template_name = 'base/register.html'
@@ -64,7 +65,7 @@ class TaskDetail(LoginRequiredMixin, DetailView):
 
 class TaskCreate(LoginRequiredMixin, CreateView):
     model = Task
-    fields = ['title', 'description', 'complete']
+    fields = ['title', 'description', 'status', 'completion_date']
     # fields  = '__all__'
     success_url = reverse_lazy('tasks')
 
@@ -75,7 +76,7 @@ class TaskCreate(LoginRequiredMixin, CreateView):
 
 class TaskUpdate(LoginRequiredMixin, UpdateView):
     model = Task
-    fields = ['title', 'description', 'complete']
+    fields = ['title', 'description', 'status', 'completion_date']
     success_url = reverse_lazy('tasks')
 
 
