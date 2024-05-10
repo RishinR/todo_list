@@ -34,14 +34,14 @@
 
 
 <div id="tasklist" class="task-items-wrapper">
-    <h3>Completed Tasks</h3>
+    <h3 style="margin-left: 10px;">Completed Tasks</h3>
     {% for task in tasks %}
     {% if task.status == 'completed' %}
     <div class="task-wrapper" data-position="{{task.pk}}">
         <div class="task-title">
             
             <div class="task-complete-icon"></div>
-            <i><a href="{% url 'task-update' task.id %}">{{task}}</a></i>
+            <i><s><a href="{% url 'task-update' task.id %}">{{task}}</a></s></i>
         </div>
         <div class="task-controls">
             <a class="delete-link" href="{% url 'task-delete' task.id %}">&#215;</a>
@@ -58,7 +58,7 @@
     {% endfor %}
 </div>
 <div id="tasklist" class="task-items-wrapper">
-    <h3>Pending Tasks</h3>
+    <h3 style="margin-left: 10px;">Pending Tasks</h3>
     {% for task in tasks %}
     {% if task.status == 'pending' %}
     <div class="task-wrapper" data-position="{{task.pk}}">
@@ -83,7 +83,7 @@
 </div>
 
 <div id="tasklist" class="task-items-wrapper">
-    <h3>Expired Tasks</h3>
+    <h3 style="margin-left: 10px;">Expired Tasks</h3>
     {% for task in tasks %}
     {% if task.status == 'expired' %}
     <div class="task-wrapper" data-position="{{task.pk}}">
